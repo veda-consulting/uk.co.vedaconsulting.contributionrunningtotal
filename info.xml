@@ -5,12 +5,12 @@
   <description>Extension for displaying counter of contributions selected</description>
   <license>AGPL-3.0</license>
   <maintainer>
-    <author>SOLOMON MAYER</author>
-    <email>solomon@vedaconsulting.co.uk</email>
+    <author>Veda Consulting</author>
+    <email>support@vedaconsulting.co.uk</email>
   </maintainer>
   <releaseDate>2014-12-31</releaseDate>
-  <version>1.0-alpha1</version>
-  <develStage>alpha</develStage>
+  <version>2.0</version>
+  <develStage>stable</develStage>
   <compatibility>
     <ver>4.5</ver>
   </compatibility>
