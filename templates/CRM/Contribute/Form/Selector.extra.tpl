@@ -14,7 +14,7 @@
         if(cj(this).attr('id') == 'toggleSelect'){
           if(cj(this).prop("checked") == true){
             var totalAmount = 0;
-            var obj = cj('.form-checkbox').val('id');
+            var obj = cj('.crm-form-checkbox').val('id');
             jQuery.each( obj, function( key, value ) {
               var splitId = value.id.split('_');
               if(splitId[0] == 'mark'){
