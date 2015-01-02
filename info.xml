@@ -18,4 +18,7 @@
   <civix>
     <namespace>CRM/Selectedcontributionamountcount</namespace>
   </civix>
+  <urls>
+    <url desc="Documentation">https://github.com/veda-consulting/uk.co.vedaconsulting.contributionrunningtotal/blob/master/README.md</url>
+  </urls>
 </extension>
