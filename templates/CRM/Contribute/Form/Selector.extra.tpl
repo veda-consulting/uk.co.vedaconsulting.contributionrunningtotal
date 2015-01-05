@@ -4,16 +4,16 @@
     cj(document).ready(function(){
       var currencySymbol = "{/literal}{$config->defaultCurrencySymbol}{literal}"; 
       cj("input[type='checkbox']").on("click",function(){
-          var position  = cj(this).offset();
-          var fixedLeft = position.left + 50 ;
-          var contnetfixedLeft = position.left + 235 ;
-          var contfeefixedLeft = position.left + 407 ;
-          var fixedTop  = position.top -  cj(document).scrollTop() ;
-          var contnetfixedTop  = position.top - cj(document).scrollTop() ;
-          var contfeefixedTop  = position.top - cj(document).scrollTop() ;
-          var dystyle   = "display:none; position: absolute; left: " + fixedLeft + "px; top: " + fixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
-          var contnetdystyle   = "display:none; position: absolute; left: " + contnetfixedLeft + "px; top: " + contnetfixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
-          var contfeedystyle   = "display:none; position: absolute; left: " + contfeefixedLeft + "px; top: " + contfeefixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
+          var position          = cj(this).offset();
+          var fixedLeft         = position.left + 50 ;
+          var contnetfixedLeft  = position.left + 235 ;
+          var contfeefixedLeft  = position.left + 407 ;
+          var fixedTop          = position.top -  cj(document).scrollTop() ;
+          var contnetfixedTop   = position.top - cj(document).scrollTop() ;
+          var contfeefixedTop   = position.top - cj(document).scrollTop() ;
+          var dystyle           = "display:none; position: absolute; left: " + fixedLeft + "px; top: " + fixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
+          var contnetdystyle    = "display:none; position: absolute; left: " + contnetfixedLeft + "px; top: " + contnetfixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
+          var contfeedystyle    = "display:none; position: absolute; left: " + contfeefixedLeft + "px; top: " + contfeefixedTop + "px; position: fixed; background: #FFFFCC; border: 1px solid #CFCEC3; padding: 10px; border-radius: 5px";
           cj("#floating_total_amount").attr("style", dystyle);
           cj("#floating_net_amount").attr("style", contnetdystyle);
           cj("#floating_fee_amount").attr("style", contfeedystyle);
@@ -54,14 +54,33 @@
             cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalAmount.toFixed(2));
           }
           if(cj(this).prop("checked") == false){
+            var unselectedBox       = cj(this);
+            var selectedId          = cj(unselectedBox).attr('id');
+            var splitId             = selectedId.split("_");
+            var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
+            var amount              = parseFloat(explodetotalAmount[1]);
+            var minusResult         = cj('#floating_total_amount').text().split(" ");
+            var totalminusResult    = parseFloat(minusResult[2]);
+            var removeRow           = parseFloat(totalminusResult) - parseFloat(amount);
+            if(isNaN(removeRow)){
               cj('#floating_total_amount').hide();
               cj("#floating_total_amount").empty();
-              cj('#floating_fee_amount').hide();
-              cj("#floating_fee_amount").empty();
               cj('#floating_net_amount').hide();
               cj("#floating_net_amount").empty();
+              cj('#floating_fee_amount').hide();
+              cj("#floating_fee_amount").empty();
+            }else if(removeRow == 0){
+              cj('#floating_total_amount').hide();
+              cj("#floating_total_amount").empty();
+              cj('#floating_net_amount').hide();
+              cj("#floating_net_amount").empty();
+              cj('#floating_fee_amount').hide();
+              cj("#floating_fee_amount").empty();
+            }else{
+              cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+removeRow.toFixed(2));
             }
           }
+        }
         else{
           if(cj(this).prop("checked") == true){
           var selectedBox = cj(this);
@@ -72,7 +91,6 @@
           var contributionID = splitId[2];
           var selectedNetValue = cj('#floating_net_amount').text().split(" ");
           var totalSelectednetValue = parseFloat(selectedNetValue[2]);
-          console.log(totalSelectednetValue);
           var selectedFeeValue = cj('#floating_fee_amount').text().split(" ");
           var totalSelectedfeeValue = parseFloat(selectedFeeValue[2]);
           if(isNaN(totalSelectednetValue)){
@@ -85,10 +103,10 @@
                  }).done(function(result) {
                  // do something
                      var contriNetamount = parseFloat(result['net_amount']);
-                     if(contriNetamount > 0 && contriNetamount != null){
+                     if(contriNetamount > 0){
                        netAmount += contriNetamount;
                        cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                     }else{  
+                     }else if(isNaN(contriNetamount)){
                       cj('#floating_net_amount').hide();
                       cj("#floating_net_amount").empty();
                     }
@@ -104,12 +122,18 @@
                  }).done(function(result) {
                  // do something
                     var contriNetamount = parseFloat(result['net_amount']);
-                    if(contriNetamount > 0 && contriNetamount != Null){
+                    if(contriNetamount > 0 ){
                       netAmount =  preNetamount + contriNetamount;
                       cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                    }else{
-                      cj('#floating_net_amount').hide();
-                      cj("#floating_net_amount").empty();
+                    }else if(isNaN(contriNetamount)){
+                      var netResult         = cj('#floating_net_amount').text().split(" ");
+                      netAmount = parseFloat(netResult[2]);
+                       if(netAmount){
+                         cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
+                       }else{
+                        cj('#floating_net_amount').hide();
+                        cj("#floating_net_amount").empty();
+                      }
                     }
                  }); 
           }
@@ -123,13 +147,13 @@
                  }).done(function(result) {
                  // do something
                      var contriFeeamount = parseFloat(result['fee_amount']);
-                     if(contriFeeamount > 0 && contriFeeamount != null){
+                     if(contriFeeamount > 0 ){
                        feeAmount += contriFeeamount;
                        cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
-                     }else{
+                     }else if(isNaN(contriFeeamount)){
                       cj('#floating_fee_amount').hide();
                       cj("#floating_fee_amount").empty();
-                     }  
+                    }
                  });
           }else{
             var preFeeamount = totalSelectedfeeValue;
@@ -145,9 +169,15 @@
                     if(contriFeeamount > 0 && contriFeeamount != null){
                       feeAmount =  preFeeamount + contriFeeamount;
                       cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
-                    }else{
-                      cj('#floating_fee_amount').hide();
-                      cj("#floating_fee_amount").empty();
+                    }else if(isNaN(contriFeeamount)){
+                       var feeResult         = cj('#floating_fee_amount').text().split(" ");
+                       feeAmount = parseFloat(feeResult[2]);
+                       if(feeAmount){
+                         cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
+                       }else{
+                        cj('#floating_fee_amount').hide();
+                        cj("#floating_fee_amount").empty();
+                      }
                     }
                  }); 
           }
@@ -181,7 +211,6 @@
           var contributionID = splitId[2];
           var netminusResult         = cj('#floating_net_amount').text().split(" ");
           var totalnetminusResult    = parseFloat(netminusResult[2]);
-          console.log(totalnetminusResult);
           var feeminusResult         = cj('#floating_fee_amount').text().split(" ");
           var totalfeeminusResult    = parseFloat(feeminusResult[2]);
           var netAmount = 0;
@@ -195,10 +224,19 @@
                      var contriNetamount = parseFloat(result['net_amount']);
                       if(contriNetamount > 0){
                         netAmount =  totalnetminusResult - contriNetamount;
+                        if(netAmount == 0){
+                          cj('#floating_net_amount').hide();
+                          cj("#floating_net_amount").empty();
+                        }
+                      }else if(isNaN(contriNetamount)){
+                        netAmount = totalnetminusResult;
+                      }else if(isNaN(netAmount) || netAmount == 0){
+                        cj('#floating_net_amount').hide();
+                        cj("#floating_net_amount").empty();
                       }
                       cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
                    }); 
-          }else if(totalnetminusResult == 0){
+          }else if(isNaN(totalnetminusResult)){
             cj('#floating_net_amount').hide();
             cj("#floating_net_amount").empty();
           }
@@ -211,10 +249,19 @@
                       var contriFeeamount = parseFloat(result['fee_amount']);
                       if(contriFeeamount > 0){
                         feeAmount =  totalfeeminusResult - contriFeeamount;
+                        if(feeAmount == 0){
+                          cj('#floating_fee_amount').hide();
+                          cj("#floating_fee_amount").empty();
+                        }
+                      }else if(isNaN(contriFeeamount)){
+                        feeAmount = totalfeeminusResult;
+                      }else if(isNaN(feeAmount) || feeAmount == 0){
+                        cj('#floating_fee_amount').hide();
+                        cj("#floating_fee_amount").empty();
                       }
                       cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
                    }); 
-          }else if(totalfeeminusResult == 0){
+          }else if(isNaN(totalfeeminusResult)){
             cj('#floating_fee_amount').hide();
             cj("#floating_fee_amount").empty();
           }
