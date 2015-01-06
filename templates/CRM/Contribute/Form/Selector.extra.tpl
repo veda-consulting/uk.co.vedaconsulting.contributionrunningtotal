@@ -53,34 +53,16 @@
               });
               cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalAmount.toFixed(2));
           }
+          // toggle uncheck condition false code
           if(cj(this).prop("checked") == false){
-            var unselectedBox       = cj(this);
-            var selectedId          = cj(unselectedBox).attr('id');
-            var splitId             = selectedId.split("_");
-            var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
-            var amount              = parseFloat(explodetotalAmount[1]);
-            var minusResult         = cj('#floating_total_amount').text().split(" ");
-            var totalminusResult    = parseFloat(minusResult[2]);
-            var removeRow           = parseFloat(totalminusResult) - parseFloat(amount);
-            if(isNaN(removeRow)){
-              cj('#floating_total_amount').hide();
-              cj("#floating_total_amount").empty();
-              cj('#floating_net_amount').hide();
-              cj("#floating_net_amount").empty();
-              cj('#floating_fee_amount').hide();
-              cj("#floating_fee_amount").empty();
-            }else if(removeRow == 0){
-              cj('#floating_total_amount').hide();
-              cj("#floating_total_amount").empty();
-              cj('#floating_net_amount').hide();
-              cj("#floating_net_amount").empty();
-              cj('#floating_fee_amount').hide();
-              cj("#floating_fee_amount").empty();
-            }else{
-              cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+removeRow.toFixed(2));
-            }
+            cj('#floating_total_amount').hide();
+            cj("#floating_total_amount").empty();
+            cj('#floating_net_amount').hide();
+            cj("#floating_net_amount").empty();
+            cj('#floating_fee_amount').hide();
+            cj("#floating_fee_amount").empty();
           }
-        }else{
+        }else{//single checkbox check condition true code
           if(cj(this).prop("checked") == true){
             var selectedBox           = cj(this);
             var netAmount             = 0;
@@ -93,9 +75,6 @@
             var selectedFeeValue      = cj('#floating_fee_amount').text().split(" ");
             var totalSelectedfeeValue = parseFloat(selectedFeeValue[2]);
             if(isNaN(totalSelectednetValue)){
-              var selectedId          = cj(selectedBox).attr('id');
-              var splitId             = selectedId.split("_");
-              var contributionID      = splitId[2];
               CRM.api3('Contribution', 'getsingle', {
                    "sequential": 1,
                   "id": contributionID
@@ -112,9 +91,6 @@
                   });
             }else{
               var preNetamount    = totalSelectednetValue;
-              var selectedId      = cj(selectedBox).attr('id');
-              var splitId         = selectedId.split("_");
-              var contributionID  = splitId[2];
               CRM.api3('Contribution', 'getsingle', {
                    "sequential": 1,
                    "id": contributionID
@@ -137,9 +113,6 @@
               }); 
             }
             if(isNaN(totalSelectedfeeValue)){
-              var selectedId          = cj(selectedBox).attr('id');
-              var splitId             = selectedId.split("_");
-              var contributionID      = splitId[2];
               CRM.api3('Contribution', 'getsingle', {
                  "sequential": 1,
                  "id": contributionID
@@ -156,9 +129,6 @@
               });
             }else{
               var preFeeamount    = totalSelectedfeeValue;
-              var selectedId      = cj(selectedBox).attr('id');
-              var splitId         = selectedId.split("_");
-              var contributionID  = splitId[2];
               CRM.api3('Contribution', 'getsingle', {
                 "sequential": 1,
                 "id": contributionID
@@ -183,15 +153,11 @@
             var selectedValue       = cj('#floating_total_amount').text().split(" ");
             var totalSelectedValue  = parseFloat(selectedValue[2]);
             if(totalSelectedValue == 0){
-              var selectedId          = cj(selectedBox).attr('id');
-              var splitId             = selectedId.split("_");
               var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
               var amount              = parseFloat(explodetotalAmount[1]);
               var totalVal            = amount + totalSelectedValue;
               cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalVal.toFixed(2));
             }else{
-              var selectedId          = cj(selectedBox).attr('id');
-              var splitId             = selectedId.split("_");
               var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
               var amount              = parseFloat(explodetotalAmount[1]);
               if(isNaN(totalSelectedValue)){
@@ -202,6 +168,7 @@
               }
             }
           }
+          //single checkbox check condition false code
           if(cj(this).prop("checked") == false){
             var unselectedBox       = cj(this);
             var selectedId          = cj(unselectedBox).attr('id');
