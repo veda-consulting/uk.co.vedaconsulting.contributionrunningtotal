@@ -136,8 +136,8 @@
                   }else{
                    cj('#floating_fee_amount').hide();
                    cj("#floating_fee_amount").empty();
-                 }
-               }                  
+                  }
+                }                  
               }
             });
             //total amount calculations
@@ -172,7 +172,6 @@
                 "sequential": 1,
                 "id": contributionID
               }).done(function(result) {
-              // do something
                 var contriNetamount = parseFloat(result['net_amount']);
                 if(contriNetamount > 0){
                    netAmount =  totalnetminusResult - contriNetamount;
@@ -200,7 +199,6 @@
                 "sequential": 1,
                 "id": contributionID
               }).done(function(result) {
-              // do something
                 var contriFeeamount = parseFloat(result['fee_amount']);
                 if(contriFeeamount > 0){
                   feeAmount =  totalfeeminusResult - contriFeeamount;
