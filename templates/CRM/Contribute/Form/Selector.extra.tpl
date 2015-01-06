@@ -188,10 +188,7 @@
                 }
                 cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
               }); 
-            }else if(isNaN(totalnetminusResult)){
-              cj('#floating_net_amount').hide();
-              cj("#floating_net_amount").empty();
-            }else if(totalnetminusResult == 0){
+            }else if(isNaN(totalnetminusResult) || totalnetminusResult == 0){
               cj('#floating_net_amount').hide();
               cj("#floating_net_amount").empty();
             }
@@ -219,10 +216,7 @@
                 }
                   cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
               }); 
-            }else if(isNaN(totalfeeminusResult)){
-              cj('#floating_fee_amount').hide();
-              cj("#floating_fee_amount").empty();
-            }else if(totalfeeminusResult == 0){
+            }else if(isNaN(totalfeeminusResult) || totalfeeminusResult == 0 ){
               cj('#floating_fee_amount').hide();
               cj("#floating_fee_amount").empty();
             }
@@ -232,10 +226,7 @@
             var minusResult         = cj('#floating_total_amount').text().split(" ");
             var totalminusResult    = parseFloat(minusResult[2]);
             var removeRow           = parseFloat(totalminusResult) - parseFloat(amount);
-            if(isNaN(removeRow)){
-              cj('#floating_total_amount').hide();
-              cj("#floating_total_amount").empty();
-            }else if(removeRow == 0){
+            if(isNaN(removeRow) || removeRow == 0){
               cj('#floating_total_amount').hide();
               cj("#floating_total_amount").empty();
             }else{
