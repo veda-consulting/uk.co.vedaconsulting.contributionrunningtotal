@@ -22,6 +22,7 @@
           cj("#floating_fee_amount").show();
           if(cj(this).attr('id') == 'toggleSelect'){
             if(cj(this).prop("checked") == true){
+              // toggle check condition true code
               var totalAmount = 0;
               var netAmount   = 0;
               var feeAmount   = 0;
@@ -35,18 +36,18 @@
                   "sequential": 1,
                   "id": contributionID
                   }).done(function(result) {
-                                // do something
-                                  var contriNetamount = parseFloat( result['net_amount']);
-                                  var contriFeeamount = parseFloat( result['fee_amount']);
-                                  if(contriNetamount > 0){
-                                      netAmount +=  contriNetamount;
-                                  }
-                                  if(contriFeeamount > 0){
-                                      feeAmount +=  contriFeeamount;
-                                  }
-                                  cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                                  cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
-                                });
+                    // do something
+                      var contriNetamount = parseFloat( result['net_amount']);
+                      var contriFeeamount = parseFloat( result['fee_amount']);
+                      if(contriNetamount > 0){
+                          netAmount +=  contriNetamount;
+                      }
+                      if(contriFeeamount > 0){
+                          feeAmount +=  contriFeeamount;
+                      }
+                      cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
+                      cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
+                  });
                   var amount   = parseFloat(explodetotalAmount[1]);
                   totalAmount += amount;
                 }
@@ -62,7 +63,8 @@
             cj('#floating_fee_amount').hide();
             cj("#floating_fee_amount").empty();
           }
-        }else{//single checkbox check condition true code
+        }else{
+          //single checkbox check condition true code
           if(cj(this).prop("checked") == true){
             var selectedBox           = cj(this);
             var netAmount             = 0;
@@ -70,100 +72,86 @@
             var selectedId            = cj(selectedBox).attr('id');
             var splitId               = selectedId.split("_");
             var contributionID        = splitId[2];
-            var selectedNetValue      = cj('#floating_net_amount').text().split(" ");
-            var totalSelectednetValue = parseFloat(selectedNetValue[2]);
-            var selectedFeeValue      = cj('#floating_fee_amount').text().split(" ");
-            var totalSelectedfeeValue = parseFloat(selectedFeeValue[2]);
-            if(isNaN(totalSelectednetValue)){
-              CRM.api3('Contribution', 'getsingle', {
-                   "sequential": 1,
-                  "id": contributionID
-                  }).done(function(result) {
-                  // do something
-                      var contriNetamount = parseFloat(result['net_amount']);
-                      if(contriNetamount > 0){
-                        netAmount += contriNetamount;
-                        cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                      }else if(isNaN(contriNetamount)){
-                       cj('#floating_net_amount').hide();
-                       cj("#floating_net_amount").empty();
-                     }
-                  });
-            }else{
-              var preNetamount    = totalSelectednetValue;
-              CRM.api3('Contribution', 'getsingle', {
-                   "sequential": 1,
-                   "id": contributionID
-              }).done(function(result) {
+            //net amount calculation
+            //API for get contribution net amount 
+            CRM.api3('Contribution', 'getsingle', {
+              "sequential": 1,
+                "id": contributionID
+            }).done(function(result) {
               // do something
-                var contriNetamount = parseFloat(result['net_amount']);
-                  if(contriNetamount > 0 ){
-                  netAmount =  preNetamount + contriNetamount;
+              var contriNetamount = parseFloat(result['net_amount']);
+              var selectedNetValue      = cj('#floating_net_amount').text().split(" ");
+              var totalSelectednetValue = parseFloat(selectedNetValue[2]);
+              if(isNaN(totalSelectednetValue)){
+                if(contriNetamount > 0){
+                  netAmount += contriNetamount;
                   cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                  }else if(isNaN(contriNetamount)){
-                    var netResult = cj('#floating_net_amount').text().split(" ");
-                    netAmount     = parseFloat(netResult[2]);
-                    if(netAmount){
-                      cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
-                    }else{
-                      cj('#floating_net_amount').hide();
-                      cj("#floating_net_amount").empty();
-                    }
+                }else if(isNaN(contriNetamount)){
+                 cj('#floating_net_amount').hide();
+                 cj("#floating_net_amount").empty();
+                }
+              }else{
+                if(contriNetamount > 0 ){
+                netAmount =  totalSelectednetValue + contriNetamount;
+                cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
+                }else if(isNaN(contriNetamount)){
+                  var netResult = cj('#floating_net_amount').text().split(" ");
+                  netAmount     = parseFloat(netResult[2]);
+                  if(netAmount){
+                    cj("#floating_net_amount").html("Net Amount:" + currencySymbol +" "+netAmount.toFixed(2));
+                  }else{
+                    cj('#floating_net_amount').hide();
+                    cj("#floating_net_amount").empty();
                   }
-              }); 
-            }
-            if(isNaN(totalSelectedfeeValue)){
-              CRM.api3('Contribution', 'getsingle', {
-                 "sequential": 1,
-                 "id": contributionID
-              }).done(function(result) {
-                 // do something
-                var contriFeeamount = parseFloat(result['fee_amount']);
+                }
+              }
+            });
+            //fee amount calculation
+            //API for get contribution fee amount 
+            CRM.api3('Contribution', 'getsingle', {
+               "sequential": 1,
+               "id": contributionID
+            }).done(function(result) {
+              // do something
+              var contriFeeamount = parseFloat(result['fee_amount']);
+              var selectedFeeValue      = cj('#floating_fee_amount').text().split(" ");
+              var totalSelectedfeeValue = parseFloat(selectedFeeValue[2]);
+              if(isNaN(totalSelectedfeeValue)){
                 if(contriFeeamount > 0 ){
                   feeAmount += contriFeeamount;
                   cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
                 }else if(isNaN(contriFeeamount)){
                  cj('#floating_fee_amount').hide();
                  cj("#floating_fee_amount").empty();
-               }
-              });
-            }else{
-              var preFeeamount    = totalSelectedfeeValue;
-              CRM.api3('Contribution', 'getsingle', {
-                "sequential": 1,
-                "id": contributionID
-              }).done(function(result) {
-              // do something
-                var contriFeeamount = parseFloat(result['fee_amount']);
-                  if(contriFeeamount > 0 && contriFeeamount != null){
-                    feeAmount =  preFeeamount + contriFeeamount;
+                }
+              }else{
+                if(contriFeeamount > 0 && contriFeeamount != null){
+                  feeAmount =  totalSelectedfeeValue + contriFeeamount;
+                  cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
+                }else if(isNaN(contriFeeamount)){
+                  var feeResult  = cj('#floating_fee_amount').text().split(" ");
+                  feeAmount      = parseFloat(feeResult[2]);
+                  if(feeAmount){
                     cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
-                  }else if(isNaN(contriFeeamount)){
-                    var feeResult  = cj('#floating_fee_amount').text().split(" ");
-                    feeAmount      = parseFloat(feeResult[2]);
-                    if(feeAmount){
-                      cj("#floating_fee_amount").html("Fee Amount:" + currencySymbol +" "+feeAmount.toFixed(2));
-                    }else{
-                     cj('#floating_fee_amount').hide();
-                     cj("#floating_fee_amount").empty();
-                   }
+                  }else{
+                   cj('#floating_fee_amount').hide();
+                   cj("#floating_fee_amount").empty();
                  }
-              }); 
-            }
+               }                  
+              }
+            });
+            //total amount calculations
             var selectedValue       = cj('#floating_total_amount').text().split(" ");
             var totalSelectedValue  = parseFloat(selectedValue[2]);
+            var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
+            var amount              = parseFloat(explodetotalAmount[1]);
+            var totalAmount         = amount + totalSelectedValue;
             if(totalSelectedValue == 0){
-              var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
-              var amount              = parseFloat(explodetotalAmount[1]);
-              var totalVal            = amount + totalSelectedValue;
-              cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalVal.toFixed(2));
+              cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalAmount.toFixed(2));
             }else{
-              var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
-              var amount              = parseFloat(explodetotalAmount[1]);
               if(isNaN(totalSelectedValue)){
                 cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+amount.toFixed(2));
               }else{
-                var totalAmount = amount + totalSelectedValue;
                 cj("#floating_total_amount").html("Total Amount:" + currencySymbol +" "+totalAmount.toFixed(2));
               }
             }
@@ -174,12 +162,11 @@
             var selectedId          = cj(unselectedBox).attr('id');
             var splitId             = selectedId.split("_");
             var contributionID      = splitId[2];
-            var netminusResult      = cj('#floating_net_amount').text().split(" ");
-            var totalnetminusResult = parseFloat(netminusResult[2]);
-            var feeminusResult      = cj('#floating_fee_amount').text().split(" ");
-            var totalfeeminusResult = parseFloat(feeminusResult[2]);
             var netAmount           = 0;
             var feeAmount           = 0;
+            //uncheck net amount calculations
+            var netminusResult      = cj('#floating_net_amount').text().split(" ");
+            var totalnetminusResult = parseFloat(netminusResult[2]);
             if(totalnetminusResult){
               CRM.api3('Contribution', 'getsingle', {
                 "sequential": 1,
@@ -208,6 +195,9 @@
               cj('#floating_net_amount').hide();
               cj("#floating_net_amount").empty();
             }
+            //uncheck fee amount calculations
+            var feeminusResult      = cj('#floating_fee_amount').text().split(" ");
+            var totalfeeminusResult = parseFloat(feeminusResult[2]);
             if(totalfeeminusResult){
               CRM.api3('Contribution', 'getsingle', {
                 "sequential": 1,
@@ -236,6 +226,7 @@
               cj('#floating_fee_amount').hide();
               cj("#floating_fee_amount").empty();
             }
+            //uncheck total amount calculations
             var explodetotalAmount  = cj('#rowid'+splitId[2]+' td.crm-contribution-amount span').text().split(" ");
             var amount              = parseFloat(explodetotalAmount[1]);
             var minusResult         = cj('#floating_total_amount').text().split(" ");
